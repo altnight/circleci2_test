@@ -3,4 +3,5 @@ __pycache__
 .cache
 .tox
 venv
-UNKNOWN.egg-info
+circleci2_test.egg-info
+.mypy_cache/

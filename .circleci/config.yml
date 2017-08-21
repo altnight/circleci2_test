@@ -2,10 +2,9 @@ version: 2
 
 jobs:
   build:
-    working_directory: /app
-  docker:
-    - image: circleci/python:3.6
+    docker:
+      - image: python:3.6
     steps:
       - checkout
-      - run: docker-compose build app
-      - run: docker-compose run app
+      - run: pip install -r test-requires.txt
+      - run: tox

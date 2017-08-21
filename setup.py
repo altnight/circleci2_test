@@ -3,8 +3,11 @@ from setuptools import setup
 
 def main():
     setup(
+        name='circleci2_test',
+        version='0.1.0',
+        lisense='MIT',
         setup_requires=[],
-        tests_require=['pytest', 'tox', 'flake8'],
+        tests_require=['tox', 'pytest', 'flake8', 'mypy'],
     )
 
 
