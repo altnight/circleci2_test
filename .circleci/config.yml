@@ -1,10 +1,53 @@
 version: 2
 
 jobs:
-  build:
+
+  step_a:
+    working_directory: ~/project
     docker:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install -r test-requires.txt
+      - restore_cache:
+          key: deps-{{ .Branch }}-{{ checksum "test-requires.txt" }}
+      - run: pip install tox
+      - run: tox --notest
+      - save_cache:
+          key: deps-{{ .Branch }}-{{ checksum "test-requires.txt" }}
+          paths:
+            - "~/.cache/pip"
       - run: tox
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  step_b:
+    working_directory: ~/project
+    docker:
+      - image: python:3.5
+    steps:
+      - run: pwd && ls .
+      - attach_workspace:
+          at: ~/project
+      - run: pwd && ls .
+      - run: ls .tox
+
+  step_c:
+    working_directory: ~/project
+    docker:
+      - image: node:8
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: node -e 'console.log(1)'
+
+
+workflows:
+  version: 2
+  flow:
+    jobs:
+      - step_a
+      - step_b:
+          requires:
+            - step_a
+      - step_c
