@@ -41,6 +41,12 @@ jobs:
           at: ~/project
       - run: node -e 'console.log(1)'
 
+#  deploy:
+#    docker:
+#      - image: python:3.4
+#    steps:
+#      - run: mkdir -p ~/.ssh && ssh-keyscan -H xxx.xxx.xxx.xxx > ~/.ssh/known_hosts
+#      - run: ssh ubuntu@xxx.xxx.xxx.xxx echo 1
 
 workflows:
   version: 2
@@ -51,3 +57,8 @@ workflows:
           requires:
             - step_a
       - step_c
+#      - deploy:
+#          requires:
+#            - step_a
+#            - step_b
+#            - step_c
