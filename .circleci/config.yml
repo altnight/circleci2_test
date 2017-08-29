@@ -41,6 +41,28 @@ jobs:
           at: ~/project
       - run: node -e 'console.log(1)'
 
+  step_db:
+    docker:
+      - image: python:3.6
+        environment:
+          PG_HOST: localhost
+          PG_USER: ubuntu
+      - image: postgres:9.5
+        environment:
+          POSTGRES_USER: ubuntu
+          POSTGRES_DB: db_name
+          POSTGRES_PASSWORD: ""
+      - image: mysql:5.7
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_DATABASE: db_name
+    steps:
+      - run: apt-get update -qq && apt-get install -y build-essential postgresql libpq-dev mysql-client
+      - run: pip install pymysql
+      - run: mysql -u root -h 127.0.0.1 -P 3306 db_name -e 'show databases'
+      - run: psql -U ubuntu -h localhost -p 5432 db_name -c '\l'
+
 #  deploy:
 #    docker:
 #      - image: python:3.4
@@ -57,6 +79,7 @@ workflows:
           requires:
             - step_a
       - step_c
+      - step_db
 #      - deploy:
 #          requires:
 #            - step_a
