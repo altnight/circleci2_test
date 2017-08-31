@@ -9,13 +9,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: deps-{{ .Branch }}-{{ checksum "test-requires.txt" }}
+          key: deps-{{ .Branch }}-{{ checksum "constraints.txt" }}-{{ checksum "setup.py" }}
       - run: pip install tox
       - run: tox --notest
       - save_cache:
-          key: deps-{{ .Branch }}-{{ checksum "test-requires.txt" }}
+          key: deps-{{ .Branch }}-{{ checksum "constraints.txt" }}-{{ checksum "setup.py" }}
           paths:
-            - "~/.cache/pip"
+            - ~/.cache/pip
+            - .tox
       - run: tox
       - persist_to_workspace:
           root: .
